@@ -1,8 +1,16 @@
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class ArbreImpl<V extends Valeur<V>> implements Arbre<V>{
     final Noeud<V> racine = new Noeud<>();
+
+
+    @Override
+    public Noeud<V> getRoot() {
+        return racine;
+    }
 
     @Override
     public int taille() {
@@ -36,6 +44,23 @@ public class ArbreImpl<V extends Valeur<V>> implements Arbre<V>{
 
     @Override
     public boolean estTrie() {
-        return racine.fluxAllValeurs();
+        return isInOrder(racine.fluxAllValeurs());
+    }
+
+    private boolean isInOrder(Stream<V> fluxAllValeurs) {
+        V prev = null;
+        for (Iterator<V> it = fluxAllValeurs.iterator(); it.hasNext(); ) {
+            V v = it.next();
+            if(prev!=null&&prev.compareTo(v)>=0){
+                return false;
+            }
+            prev=v;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return  racine.toString();
     }
 }
